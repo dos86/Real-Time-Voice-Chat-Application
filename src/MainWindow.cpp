@@ -1,5 +1,7 @@
 #include "MainWindow.hpp"
 #include <QVBoxLayout>
+#include <QSlider>
+#include <QPushButton>
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), isConnected(false), isMuted(false) {
@@ -27,30 +29,6 @@ MainWindow::MainWindow(QWidget* parent)
     connect(volumeSlider, &QSlider::valueChanged, this, &MainWindow::adjustVolume);
 }
 
-MainWindow::~MainWindow() {
-    delete client;
-}
-
-void MainWindow::toggleConnection() {
-    if (isConnected) {
-        client->disconnectFromServer();
-        connectButton->setText("Connect");
-        statusLabel->setText("Disconnected");
-        isConnected = false;
-    } else {
-        client->connectToServer("239.255.43.21", 45454); // Example multicast address
-        connectButton->setText("Disconnect");
-        statusLabel->setText("Connected");
-        isConnected = true;
-    }
-}
-
-void MainWindow::toggleMute() {
-    isMuted = !isMuted;
-    muteButton->setText(isMuted ? "Unmute" : "Mute");
-}
-
 void MainWindow::adjustVolume(int value) {
-    // Adjust playback volume here
-    qDebug() << "Volume:" << value;
+    client->setVolume(value); // Pass volume value to the client
 }
